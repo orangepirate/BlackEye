@@ -2,37 +2,36 @@ import nmap
 import re
 
 commonPrefix = '[++]'
-essentialPrefix = '[++]'
+essentialPrefix = '[##]'
 midfix = '[--]'
 
-targetIp = input('input the target ip address: ')
-#targetIp = '123.58.182.251'
+#targetIp = input('input the target ip address: ')
+scanIp = '123.58.182.251-252'
+targets = {}
 
 nm = nmap.PortScanner()
-ret = nm.scan(targetIp)
+ret = nm.scan(scanIp)
 commandLine = ret['nmap']['command_line']
 scanStats = ret['nmap']['scanstats']
 scanResult = ret['scan']
-
 scanTime = scanStats['timestr']
-hostName = scanResult[targetIp]['hostnames'][0]['name']
-hostType = scanResult[targetIp]['hostnames'][0]['type']
-#ipv4 = scanResult[targetIp]['addresses']['ipv4']
-#macAddr = scanResult[targetIp]['addresses']['mac']
-#vendor = scanResult[targetIp]['vendor'][macAddr]
-#status = scanResult[targetIp]['status']['state']
-#statusReason = scanResult[targetIp]['status']['reason']
-#ports = scanResult[targetIp]['tcp']
 
-print('{}command line: {}'.format(commonPrefix,commandLine))
-print('{}scan time; {}'.format(commonPrefix,scanTime))
+print('commandline:{}'.format(commandLine))
+print('scanStats:{}'.format(scanStats))
+#print('scanresult:{}'.format(scanResult))
 
-for key,value in scanResult[targetIp].items():
-    if key == 'tcp':
-        for subkey,subvalue in value.items():
-            print('{}{}:{}\n'.format(essentialPrefix,subkey,subvalue))
-            
-    else:
-        print('{}{}:{}\n'.format(essentialPrefix,key,value))
-        print('\n')
-    
+def parseTargetResu(targetResult):
+    state = targetResult['status']['state']
+    vendor = targetResult['vendor']
+    portsInfo = targetResult['tcp']
+    ports = list(targetResult['tcp'].keys())
+
+    print('state:{}'.format(state))
+    print('vendor:{}'.format(vendor))
+    print('ports:{}'.format(ports))
+
+
+for targetIp,targetResult in scanResult.items():
+    targets[targetIp] = targetResult
+    #print('{}:{}'.format(target,result))
+    parseTargetResu(targetResult)
