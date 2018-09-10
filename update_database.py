@@ -17,22 +17,23 @@ class MySqlCommand(object):
         except Exception as e:
             print(e)
 
-    def insertData(self,mydict):
+    def insertData(self,mydict, table='devs'):
         # convert mydict.value to str
         for key,value in mydict.items():
             mydict[key] = str(value)
+        '''
         # check if the data exist
-        table = 'devs'
         sqlSelect = 'select dev_ip from {} where dev_ip = "{}"'.format(table,mydict['dev_ip'])
         response = self.cursor.execute(sqlSelect)
         if response:
-            print(' the dev {} is already exist'.format(mydict['dev_ip']))
+            print(' the dev {} is already exist, insert a new one '.format(mydict['dev_ip']))
             return 0
+        '''
         # insert data to database
         try:
             cols = ', '.join(mydict.keys())
-            values = '","'.join(mydict.values())
-            sqlInsert = 'insert into {} {} values ("{}")'.format(table, cols, values)
+            values = '\",\"'.join(mydict.values())
+            sqlInsert = 'insert into {} ({}) values (\"{}\")'.format(table, cols, values)
             try:
                 result = self.cursor.execute(sqlInsert)
                 insert_id = self.conn.insert_id()
