@@ -23,7 +23,7 @@ class MySqlCommand(object):
             mydict[key] = str(value)
         # check if the data exist
         table = 'devs'
-        sqlSelect = 'select dev_ip from {} where dev_ip = {}'.format(table,mydict['dev_ip'])
+        sqlSelect = 'select dev_ip from {} where dev_ip = "{}"'.format(table,mydict['dev_ip'])
         response = self.cursor.execute(sqlSelect)
         if response:
             print(' the dev {} is already exist'.format(mydict['dev_ip']))
@@ -32,7 +32,7 @@ class MySqlCommand(object):
         try:
             cols = ', '.join(mydict.keys())
             values = '","'.join(mydict.values())
-            sqlInsert = 'insert into {} {} values {}'.format(table, cols, values)
+            sqlInsert = 'insert into {} {} values ("{}")'.format(table, cols, values)
             try:
                 result = self.cursor.execute(sqlInsert)
                 insert_id = self.conn.insert_id()
