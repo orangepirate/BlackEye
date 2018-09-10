@@ -1,5 +1,6 @@
 import nmap
 import re
+import datetime
 from update_database import MySqlCommand
 
 commonPrefix = '[++]'
@@ -43,18 +44,20 @@ def parseTargetResu(targetResult):
     #print('{}state:{}'.format(midfix,state))
     #print('{}vendor:{}'.format(midfix,vendor))
     #print('{}:{} {} {}'.format(portfix,ports,portProtocals, portCpes))
-    names = ['dev_domain','dev_hostname','dev_hosttype','dev_vendor','dev_state','dev_ports','dev_protocals','dev_cpes']
+    names = ['dev_domain','dev_hostname','dev_hosttype','dev_vendor','dev_state','dev_ports','dev_portsprotocals','dev_cpes']
     values = [domain,hostName,hostType,vendor,state,ports,portProtocals,portCpes]
     for i in range(len(names)):
         retDic.update({names[i]:values[i]})
     return retDic
+
+#if __name__ == '__main__':
 
 for targetIp,targetResult in scanResult.items():
     targets[targetIp] = targetResult
     print('targetIp：{}'.format(targetIp))
     #print('{}:{}'.format(target,result))
     targetDict = parseTargetResu(targetResult)
-    targetDict.update({'update_time':scanTime})
+    targetDict.update({'update_time':datetime.datetime.now()})
     targetDict.update({'dev_ip':targetIp})
     # insert target info into database
     try:
@@ -66,9 +69,6 @@ for targetIp,targetResult in scanResult.items():
         response = mysqlCommand.insertData(targetDict)
     except Exception as e:
         print(e)
-
-
-
 
 print('\n{}'.format(scanResult))
 
