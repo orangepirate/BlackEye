@@ -5,9 +5,9 @@ class checkModules(object):
         self.url = ''
         self.command = 'pip install {}'
 
-    # connect to database
+    # check IPy
     def checkIpy(self):
-        try:
-            self.command.format('IPy')
-        except Exception as e:
-            print(e)
+        return
+    # check fake-useragent
+    def checkFakeUserAgent(self):
+        return
