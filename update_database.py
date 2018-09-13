@@ -18,9 +18,11 @@ class MySqlCommand(object):
             print(e)
 
     def insertData(self,mydict, table='devs'):
-        # convert mydict.value to str
-        for key,value in mydict.items():
+        #fix insertdata into format values
+        for key, value in mydict.items():
             mydict[key] = str(value)
+        if (mydict[key] == '[]' or mydict[key] == '{}'):
+                mydict[key] = 'null'
         '''
         # check if the data exist
         sqlSelect = 'select dev_ip from {} where dev_ip = "{}"'.format(table,mydict['dev_ip'])
